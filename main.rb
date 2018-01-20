@@ -42,4 +42,13 @@ class Main < Sinatra::Base
         redirect '/log-in'
     end
 
+    get '/my-profile' do
+        if session[:id]
+            @user = User.get(session[:id].to_i)
+            slim :'my-profile'
+        else
+            redirect '/log'
+        end
+    end
+
 end
