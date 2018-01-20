@@ -30,4 +30,10 @@ class Main < Sinatra::Base
         email = params['inputEmail']
         password = params['inputPassword']
 
+        if User.create(username, email, password, session)
+            redirect '/'
+        else
+            redirect '/register'
+        end
+    end
 end
