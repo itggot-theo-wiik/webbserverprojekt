@@ -25,4 +25,9 @@ class Main < Sinatra::Base
         slim :register
     end
 
+    post '/register' do
+        username = params['inputUsername']
+        email = params['inputEmail']
+        password = params['inputPassword']
+
 end
