@@ -6,4 +6,8 @@ class Main < Sinatra::Base
         slim :shop
     end
 
+    get '/log-in' do
+        slim :'log-in'
+    end
+
 end
