@@ -10,4 +10,14 @@ class Main < Sinatra::Base
         slim :'log-in'
     end
 
+    post '/log-in' do
+        email = params['inputEmail']
+        password = params['inputPassword']
+
+        if User.authenticate(email, password, session)
+            redirect '/'
+        else
+            redirect '/log-in'
+        end
+    end
 end
