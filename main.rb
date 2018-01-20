@@ -36,4 +36,10 @@ class Main < Sinatra::Base
             redirect '/register'
         end
     end
+
+    get '/log-out' do
+        session.destroy
+        redirect '/log-in'
+    end
+
 end
