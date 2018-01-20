@@ -1,0 +1,43 @@
+doctype html
+
+html
+    head
+        title Merch for days
+        link href="/css/stylesheet.css" type="text/css" rel="stylesheet"
+        meta name="viewport" content="width=device-width, initial-scale=1.0"
+
+        link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"
+        link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous"
+        script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"
+
+    body
+
+        / Header
+        nav.navbar.navbar-expand-lg.navbar-dark.bg-danger
+            a.navbar-brand href="/"
+                | Joe Danger 💝 Merch
+            button.navbar-toggler type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
+                span.navbar-toggler-icon
+            .collapse.navbar-collapse#navbarNav
+                ul.navbar-nav
+                    li.nav-item
+                        a.nav-link href="/"
+                            | Shop
+                    - if session[:username]
+                        li.nav-item
+                            a.nav-link href="/my-profile"
+                                = session[:username]
+                        li.nav-item
+                            a.nav-link href="/log-out"
+                                | Log out
+                    - else
+                        li.nav-item
+                            a.nav-link href="/log-in"
+                                | Log in
+                        li.nav-item
+                            a.nav-link href="/register"
+                                | Register
+
+
+        .container
+            == yield
