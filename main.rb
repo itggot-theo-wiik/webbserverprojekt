@@ -20,4 +20,9 @@ class Main < Sinatra::Base
             redirect '/log-in'
         end
     end
+
+    get '/register' do
+        slim :register
+    end
+
 end
