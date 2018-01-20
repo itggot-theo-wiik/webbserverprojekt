@@ -1,4 +1,19 @@
 class User
+
+    attr_reader :id, :username, :email
+
+    def initialize(user)
+        @id = user.first
+        @username = user[1]
+        @email = user[2]
+    end
+
+    def self.get(id)
+        db = SQLite3::Database.open('db/db.sqlite')
+        user = db.execute('SELECT * FROM users WHERE id IS ?', id).first
+        return User.new(user)
+    end
+
     def self.create(username, email, password, session)
         db = SQLite3::Database.open('db/db.sqlite')
 
@@ -45,4 +60,5 @@ class User
             return false
         end
     end
+
 end
