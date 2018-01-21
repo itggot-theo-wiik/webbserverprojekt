@@ -1,1 +1,21 @@
-h1 Shop
+h4 Filter
+form action="/" method="post"
+    .form-group
+        input type="text"
+
+    button.btn.btn-primary type="submit" Submit
+
+h1.mt-5 Shop
+
+.card-columns
+    - @items.each do |item|
+        a href="/items/#{item.merch_id}"
+            .card
+                img.card-img-top src="http://3.bp.blogspot.com/-QDZhPJbkbII/T3IGgTLZMtI/AAAAAAAAAIM/jiXE9SU9Bo4/s1600/White1.jpg" alt="IMAGE"
+                .card-body
+                    h5.card-title
+                        = item.name
+                    p.card-text
+                        = item.price
+                        |  
+                        | kr
