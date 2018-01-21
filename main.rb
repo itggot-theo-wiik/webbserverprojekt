@@ -52,4 +52,7 @@ class Main < Sinatra::Base
         end
     end
 
+    get '/items' do
+        redirect '/'
+    end
 end
