@@ -3,6 +3,7 @@ class Main < Sinatra::Base
     enable :sessions
 
     get '/' do
+        @items = Item.get()
         slim :shop
     end
 
