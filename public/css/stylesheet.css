@@ -1,27 +1,51 @@
+/* https://material.io/color/#!/?view.left=0&view.right=0&primary.color=DE0000&secondary.color=FFBA00 */
+
 * {
     /* font-family: 'Open Sans', sans-serif; */
 }
 
+.row_center {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center; */
+    align-items: center;
+}
+
+.item_image {
+    height: 200px;
+    width: 200px;
+    overflow: hidden;
+}
+
+
+/* Colors */
+
 .bg_primary {
-    background-color: aqua;
+    background-color: #de0000;
 }
 
 .bg_primary_light {
-    
+    background-color: #ff5332;
 }
 
 .bg_primary_dark {
-    
+    background-color: #a30000;
 }
 
-.text_primary {
-    
+.bg_secondary {
+    background-color: #ffba00;
 }
 
-.text_primary_light {
-    
+.bg_secondary_light {
+    background-color: #ffec4d;
 }
 
-.text_primary_dark {
-    
+.bg_secondary_dark {
+    background-color: #c78a00;
 }
+
+.text_primary {}
+
+.text_primary_light {}
+
+.text_primary_dark {}
