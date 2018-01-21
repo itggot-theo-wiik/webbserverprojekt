@@ -55,4 +55,11 @@ class Main < Sinatra::Base
     get '/items' do
         redirect '/'
     end
+
+    get '/items/:id' do
+        id = params[:id].to_i
+        @items = Item.get_merch(id)
+        slim :show
+    end
+
 end
