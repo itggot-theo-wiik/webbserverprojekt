@@ -4,6 +4,8 @@ class Main < Sinatra::Base
 
     get '/' do
         @items = Item.get()
+        slim :home
+    end
         slim :shop
     end
 
