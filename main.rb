@@ -78,4 +78,23 @@ class Main < Sinatra::Base
             redirect '/log-in'
         end
     end
+
+    post '/cart' do
+        if session[:id]
+            item = params['item']
+
+            if item == nil
+                redirect '/shop'
+            end
+
+            if Cart.add(item, session)
+                redirect '/shop'
+            else
+                redirect '/shop'
+            end
+
+        else
+            redirect '/log-in'
+        end
+    end
 end
