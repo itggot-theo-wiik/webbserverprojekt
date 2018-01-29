@@ -62,4 +62,7 @@ class Main < Sinatra::Base
         slim :show
     end
 
+    get '/about' do
+        slim :about
+    end
 end
