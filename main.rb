@@ -97,4 +97,14 @@ class Main < Sinatra::Base
             redirect '/log-in'
         end
     end
+
+    # Admin
+    get '/admin' do
+        if session[:admin]
+            slim :'admin/admin'
+        else
+            redirect '/log-in'
+        end
+    end
+
 end
