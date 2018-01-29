@@ -65,4 +65,17 @@ class Main < Sinatra::Base
     get '/about' do
         slim :about
     end
+
+    get '/cart' do
+        if session[:id]
+            @cart = Cart.get(session[:cart], session[:id])
+            @items = []
+            @cart.each do |x|
+                @items << Item.new(x)
+            end
+            slim :cart
+        else
+            redirect '/log-in'
+        end
+    end
 end
