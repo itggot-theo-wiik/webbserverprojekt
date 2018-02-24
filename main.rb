@@ -141,4 +141,9 @@ class Main < Sinatra::Base
         end
     end
 
+    get '/stats' do
+        @total_money_spent = Statistic.total_money()
+        slim :stats
+    end
+
 end
