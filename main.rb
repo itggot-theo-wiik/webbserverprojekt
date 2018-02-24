@@ -109,4 +109,11 @@ class Main < Sinatra::Base
         end
     end
 
+    get '/admin/brands' do
+        if session[:admin]
+            slim :'admin/brands'
+        else
+            redirect '/log-in'
+        end
+    end
 end
