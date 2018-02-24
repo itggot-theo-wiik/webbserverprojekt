@@ -125,4 +125,20 @@ class Main < Sinatra::Base
         end
     end
 
+    get '/admin/add_random' do
+        if session[:admin]
+            db = SQLite3::Database.open('db/db.sqlite')
+            100.times do
+                color = rand(4) + 1
+                merch = rand(12) + 1
+                size = rand(4) + 1
+                status = "ready_for_shipping"
+                db.execute('INSERT INTO items (status, size_id, color_id, merch_id) VALUES (?,?,?,?)', [status, size, color, merch])
+            end
+            redirect '/shop'
+        else
+            redirect '/log-in'
+        end
+    end
+
 end
