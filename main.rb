@@ -135,6 +135,49 @@ class Main < Sinatra::Base
         end
     end
 
+    get '/orders' do
+        if session[:id]
+            @orders = Order.get(session[:id].to_i)
+            slim :orders
+        else
+            redirect '/log-in'
+        end
+    end
+
+    post '/orders' do
+        if session[:id]
+
+            # Do stuff
+            if order_id = params['order_id']
+                # gets
+                if Order.change_status(order_id.to_i, session[:id].to_i, "recieved")
+                    # Success
+                    redirect '/orders'
+                else
+                    # Fail
+                    redirect '/orders'
+                end
+            end
+
+            @cart = Cart.get(session[:cart], session)
+            
+            @items = []
+            @cart.each do |x|
+                @items << Item.new(x)
+            end
+
+            Order.create(@items, session)
+
+            redirect '/orders'
+        else
+            redirect '/log-in'
+        end
+    end
+
+    get '/orders/:id' do
+
+    end
+
     # Admin
     get '/admin' do
         if session[:admin]
