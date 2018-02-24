@@ -8,21 +8,13 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    autoprefixer-rails (7.2.5)
-      execjs
     bcrypt (3.1.11)
-    bootstrap (4.0.0.beta3)
-      autoprefixer-rails (>= 6.0.3)
-      popper_js (>= 1.12.3, < 2)
-      sass (>= 3.5.2)
-    execjs (2.7.0)
     ffi (1.9.18)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
     mustermann (1.0.1)
-    popper_js (1.12.9)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
@@ -52,8 +44,8 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt
-  bootstrap (~> 4.0.0.beta3)
   rerun!
+  sass
   sinatra
   slim
   sqlite3
