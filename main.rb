@@ -6,7 +6,42 @@ class Main < Sinatra::Base
         @items = Item.get()
         slim :home
     end
+
+    get '/shop' do
+        session[:return_url] = "/shop"
+        @merch_type = params['merch_type']
+        @size = params['size']
+
+        @merchandises = Merch.all(@merch_type, @size)
+        @merch_types = Merch.get_types()
+        @sizes = Merch.get_sizes()
+
         slim :shop
+    end
+
+    post '/shop' do
+        merch_types = params[:merch_types]
+        sizes = params[:sizes]
+
+        redirect_url = '/shop'
+        if merch_types || sizes
+            redirect_url += '?'
+
+            if merch_types
+                merch_types.each_with_index do |x, i|
+                    redirect_url += "merch_type[]=#{merch_types[i].to_s}&"
+                end
+            end
+
+            if sizes
+                sizes.each_with_index do |x, i|
+                    redirect_url += "size[]=#{sizes[i].to_s}&"
+                end
+            end
+
+        end
+
+        redirect "#{redirect_url}"
     end
 
     get '/log-in' do
