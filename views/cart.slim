@@ -1,0 +1,98 @@
+h1 My Cart
+
+- if @items != []
+    h2.mt-5 My items
+
+    table.table.table-hover
+        thead
+            tr
+                th scope="col" #
+                th scope="col" Name
+                th scope="col"
+                th scope="col" Color
+                th scope="col" Size
+                th scope="col" 💲
+                th scope="col" In stock?
+                th scope="col" Remove
+        tbody
+            - @items.each_with_index do |item, i|
+                - if item
+                    tr
+                        th scope="row"
+                            = i + 1
+                        td
+                            = item.name
+                        td
+                            .color_example style="background-color: #{item.color_hex}"
+                        td
+                            = item.color_name
+                        td
+                            - p item
+                            = item.size_name.upcase
+                        td
+                            = item.price
+                            |  kr
+                        td
+                            - if true
+                                | 👍
+                            - else
+                                | 👎
+                        td
+                            form action="/remove_from_cart_cheat_fix" method="post"
+                                input type="hidden" value="#{i}" name="cart_id"
+                                button.btn.btn-danger type="submit" Delete
+                - else
+                    tr
+                        th scope="row"
+                            = i + 1
+                        td
+                            | This item is sadly out of stock... 🎤😭
+    
+    h2
+        - total = 0
+        - @items.each do |item|
+            - if item
+                - total += item.price
+        span.badge.bg_primary.text-light
+            | Totalt: 
+            |  
+            = total
+            |  kr
+
+    h2.mt-5 Information
+
+    form action="/orders" method="post"
+        .form-group
+            .form-row
+                .col
+                    label for="inputFirstName" First Name
+                    input.form-control#disabledTextInput type="text" placeholder="First Name" name="inputFirstName"
+                .col
+                    label for="inputLastName" Last Name
+                    input.form-control#disabledTextInput type="text" placeholder="Lastname" name="inputLastName"
+        .form-group
+            .form-row
+                .col
+                    label for="inputCardNumber" Card Number
+                    input.form-control#disabledTextInput type="text" placeholder="Card number" name="inputCardNumber"
+                .col
+                    label for="inputCvs" CVS
+                    input.form-control#disabledTextInput type="text" placeholder="Code" name="inputCvs"
+
+        .form-group
+            .form-row
+                .col
+                    label for="inputAdress" Adress
+                    input.form-control#disabledTextInput type="text" placeholder="Adress" name="inputAdress"
+                .col
+                    label for="inputZipCode" Zip Code
+                    input.form-control#disabledTextInput type="text" placeholder="Zip Code" name="inputZipCode"
+
+        button.btn.btn-success type="submit"
+            | Buy 🤑
+
+- else
+    h3 You have not put anything in your cart.
+    a href="/shop"
+        h4
+            | Go buy something you ugly human being 👿

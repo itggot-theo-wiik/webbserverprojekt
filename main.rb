@@ -3,8 +3,24 @@ class Main < Sinatra::Base
     enable :sessions
 
     get '/' do
-        @items = Item.get()
+        session[:return_url] = "/"
+        @random_merch = Merch.get_random()
+        @comments = Comment.all().reverse
+
         slim :home
+    end
+
+    post '/' do
+        comment = params[:inputComment]
+        img_url = params[:inputImgUrl]
+
+        # if session[:id]
+            date = Time.now.to_s
+            Comment.create({user_id: 3, comment: comment, img_url: img_url, date: date})
+            # Comment.create(session[:id], comment, img_url)
+        # end
+
+        redirect '/'
     end
 
     get '/shop' do
@@ -53,13 +69,20 @@ class Main < Sinatra::Base
         password = params['inputPassword']
 
         if User.authenticate(email, password, session)
-            redirect '/'
+            if session[:return_url]
+                url = session[:return_url]
+                session[:return_url] = false
+                redirect "#{url}"
+            else
+                redirect '/shop'
+            end
         else
             redirect '/log-in'
         end
     end
 
     get '/register' do
+        # redirect '/shop'
         slim :register
     end
 
@@ -67,9 +90,14 @@ class Main < Sinatra::Base
         username = params['inputUsername']
         email = params['inputEmail']
         password = params['inputPassword']
+        secret = params['inputSecret']
+
+        if secret != "spam2"
+            redirect '/register'
+        end
 
         if User.create(username, email, password, session)
-            redirect '/'
+            redirect '/shop'
         else
             redirect '/register'
         end
@@ -85,17 +113,42 @@ class Main < Sinatra::Base
             @user = User.get(session[:id].to_i)
             slim :'my-profile'
         else
-            redirect '/log'
+            redirect '/log-in'
         end
     end
 
+    post '/my-profile' do
+        user_id = params[:inputUserId]
+        new_password = params[:inputPassword]
+
+        p session[:id].to_i
+        p user_id.to_i
+        p new_password
+
+        # Is the forms password the same as the logged in one?
+        if (session[:id].to_i == user_id.to_i) && new_password != nil
+            User.change_password(user_id.to_i, new_password)
+            session[:password_change_successfull] = true
+        else
+            session[:password_change_successfull] = false
+        end
+
+        redirect '/my-profile'
+
+    end
+
     get '/items' do
-        redirect '/'
+        redirect '/shop'
     end
 
     get '/items/:id' do
         id = params[:id].to_i
-        @items = Item.get_merch(id)
+        session[:return_url] = "/items/#{id}"
+        @merch = Merch.one(id)
+        @items = Item.one(id)
+
+        @items = @items.sort_by{|x| x.size_id}
+
         slim :show
     end
 
@@ -106,10 +159,17 @@ class Main < Sinatra::Base
     get '/cart' do
         if session[:id]
             @cart = Cart.get(session[:cart], session[:id])
+
             @items = []
+
             @cart.each do |x|
-                @items << Item.new(x)
+                if x
+                    @items << Item.one_from_id(x.first)
+                else
+                    @items << x
+                end
             end
+
             slim :cart
         else
             redirect '/log-in'
@@ -122,10 +182,11 @@ class Main < Sinatra::Base
 
             if item == nil
                 redirect '/shop'
+                p "item was now nill, this was not good :("
             end
 
             if Cart.add(item, session)
-                redirect '/shop'
+                redirect '/cart'
             else
                 redirect '/shop'
             end
@@ -133,6 +194,12 @@ class Main < Sinatra::Base
         else
             redirect '/log-in'
         end
+    end
+
+    post '/remove_from_cart_cheat_fix' do
+        cart_id = params['cart_id']
+        session[:cart].delete_at(cart_id.to_i)
+        redirect '/cart'
     end
 
     get '/orders' do
@@ -147,7 +214,7 @@ class Main < Sinatra::Base
     post '/orders' do
         if session[:id]
 
-            # Do stuff
+            # Change status of order
             if order_id = params['order_id']
                 # gets
                 if Order.change_status(order_id.to_i, session[:id].to_i, "recieved")
@@ -160,10 +227,10 @@ class Main < Sinatra::Base
             end
 
             @cart = Cart.get(session[:cart], session)
-            
+
             @items = []
             @cart.each do |x|
-                @items << Item.new(x)
+                @items << Item.one_from_id(x.first)
             end
 
             Order.create(@items, session)
@@ -172,6 +239,10 @@ class Main < Sinatra::Base
         else
             redirect '/log-in'
         end
+    end
+
+    post '/order_confirmation' do
+
     end
 
     get '/orders/:id' do
@@ -187,6 +258,43 @@ class Main < Sinatra::Base
         end
     end
 
+     get '/admin/items' do
+        if session[:admin]
+            @brands = Brand.all()
+            @colors = Color.all()
+            db = SQLite3::Database.open('db/db.sqlite')
+            @merchandise = db.execute('SELECT * FROM merch')
+            @sizes = Size.all()
+            slim :'admin/items'
+        else
+            redirect '/log-in'
+        end
+    end
+
+    post '/admin/items' do
+        merch = params[:inputMerch]
+        color = params[:inputColor]
+        size = params[:inputSize]
+        amount = params[:inputAmount]
+
+        if amount == ""
+            amount = 1
+        end
+
+        if !merch || !color || !size || !amount || amount.to_i == 0
+            session[:add_item_error] = "Please. Don't be a dummy! 🤓💲"
+        end
+
+        Item.add(merch: merch, color: color, size: size, amount: amount.to_i)
+
+        redirect '/admin/items'
+    end
+
+    get '/admin/users' do
+        @users = User.all()
+        slim :'admin/users'
+    end
+
     get '/admin/brands' do
         if session[:admin]
             slim :'admin/brands'
@@ -195,12 +303,56 @@ class Main < Sinatra::Base
         end
     end
 
-    get '/admin/items' do
-        if session[:admin]
-            slim :'admin/items'
+    get '/admin/orders' do
+        # if session[:admin]
+            @packaging = params['packaging']
+            @shipping = params['shipping']
+            @recieved = params['recieved']
+            @returned = params['returned']
+
+            if @packaging != "packaging" && @shipping != "shipping" && @recieved != "recieved" && @returned != "returned"
+                @orders = Order.all_active()
+            else
+                @orders = Order.get_with_filter(@packaging, @shipping, @recieved, @returned)
+            end
+
+            slim :'admin/orders'
+        # else
+            # redirect '/log-in'
+        # end
+    end
+
+    post '/admin/orders' do
+        puts "Filter: #{params[:inputStatus]}"
+        puts "User id: #{params[:inputUserId]}"
+
+        filter = params[:inputStatus]
+
+        url = "/admin/orders"
+
+        things = ['packaging', 'shipping', 'recieved', 'returned']
+
+        if filter
+            url = url + "?"
+            things.each_with_index do |x, i|
+                if filter.include? (x)
+                    url += "#{x}=#{x}&"
+                end
+            end
         else
-            redirect '/log-in'
+            p "no filter!!!!"
         end
+
+        redirect "#{url}"
+    end
+
+    post '/admin/change_status' do
+        @status = params[:inputStatus]
+        @user_id = params[:inputUserId]
+        @order_id = params[:inputOrderId]
+
+        Order.change_status(@order_id.to_i, @user_id.to_i, @status)
+        redirect '/admin/orders'
     end
 
     get '/admin/add_random' do
@@ -221,7 +373,41 @@ class Main < Sinatra::Base
 
     get '/stats' do
         @total_money_spent = Statistic.total_money()
+        @percentage_of_orders_recieved = Statistic.percentage_of_orders_recieved()
         slim :stats
+    end
+
+    get '/gamble' do
+        session[:return_url] = "/gamble"
+        if session[:id]
+            @balance = Gamble.balance(11)
+        end
+        slim :gamble
+    end
+
+    get '/coin-flip' do
+        redirect '/gamble'
+    end
+
+    post '/coin-flip' do
+        if session[:id]
+            bet = 10
+            side = params[:inputSide]
+
+            if bet.to_f < Gamble.balance(session[:id])
+                # It can bet
+                if Gamble.pay(session[:id], bet, session)
+                    Gamble.coin_flip(side, bet, session)
+                    redirect '/gamble'
+                else
+                    redirect '/gamble'
+                end
+            else
+                # Can not
+            end
+        else
+            redirect '/log-in'
+        end
     end
 
 end

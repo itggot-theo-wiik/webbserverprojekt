@@ -1,0 +1,48 @@
+h1 Add a new item
+
+- if session[:add_item_error]
+    h5.text-danger
+        = session[:add_item_error]
+    - session[:add_item_error] = false
+
+form.mx-auto action="/admin/items" method="post"
+    .row.mt-5
+        .col-12.col-md-4
+            h3 Merch
+            - @merchandise.each_with_index do |merch, i|
+                .custom-control.custom-radio
+                    input.custom-control-input type="radio" name="inputMerch" id="inputMerch#{i}" value="#{i + 1}"
+                    label.custom-control-label for="inputMerch#{i}"
+                        = merch[1]
+        .col-12.col-md-4
+            h3 Color
+            - @colors.each_with_index do |color, i|
+                .custom-control.custom-radio
+                    input.custom-control-input type="radio" name="inputColor" id="inputColor#{i}" value="#{i + 1}"
+                    label.custom-control-label for="inputColor#{i}"
+                        = color.name
+        .col-12.col-md-4
+            h3 Size
+            - @sizes.each_with_index do |size, i|
+                .custom-control.custom-radio
+                    input.custom-control-input type="radio" name="inputSize" id="inputSize#{i}" value="#{i + 1}"
+                    label.custom-control-label for="inputSize#{i}"
+                        = size.name
+        .col-12.mt-3
+            .form-group
+                label for="inputAmount" How many?
+                input#inputAmount.form-control type="text" placeholder="Enter the amount of this item taht should be added (by default 1)" name="inputAmount"
+        .col-12
+            button.btn.btn-outline-success.float-right Add to stock
+
+
+        / .col-12.col-md-4
+        /     h3 Brand
+        /     - @brands.each_with_index do |brand, i|
+        /         .custom-control.custom-checkbox
+        /             input.custom-control-input id="customCheck#{i}" type="checkbox"
+        /             label.custom-control-label for="customCheck#{i}"
+        /                 = brand.name
+
+- p @brands
+- p @colors

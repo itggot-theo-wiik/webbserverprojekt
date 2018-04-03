@@ -1,0 +1,39 @@
+title Succesful Order @ Joe Danger ❤ Merch 
+
+Browser -> Web Server: HTTP get /cart
+Web Server -> main.rb: get('/cart')
+main.rb -> main.rb: match route get('/cart')
+main.rb -> main.rb: slim(:cart)
+main.rb -> Web Server: HTML
+Web Server -> Browser: HTTP response
+Browser -> Browser: Fill form
+Browser -> Web Server: HTTP post '/cart'
+Web Server -> main.rb: post('/cart)
+main.rb -> main.rb: match route post('/cart')
+main.rb -> Order: new(user_id, session(är det man lagt i cart) )
+Order -> DB: SELECT * FROM items WHERE id IS ? AND color_id IS ? && size_id IS ?
+DB -> Order: [specifikt item]
+Order -> Order: Kollar om det specifika föremålet finns
+Order -> DB: INSERT INTO orders (status, order_date, user_id) VALUES ("shipping", datum, user_id)
+DB -> Order: done
+Order -> DB: INSERT INTO order_item (order_id, item_id) VALUES (?, ?)
+DB -> Order: done
+Order -> DB: UPDATE items SET status = "bought" WHERE id IS ?
+Order  -> main.rb: order_id
+main.rb -> Web Server: redirect '/orders/order_id'
+Web Server -> Browser: HTTP redirect '/orders/order_id'
+Browser -> Web Server: HTTP get '/order/order_id'
+Web Server -> main.rb: get('/orders/order_id')
+main.rb -> main.rb: match route get('/orders/order_id')
+main.rb -> Order: verify(user_id, order_id)
+Order -> DB: SELECT id FROM orders WHERE user_id IS ? AND order_id IS ?
+DB -> Order: [id]
+Order -> Order: Kollar om den är nil
+Order -> main.rb: true
+main.rb -> Order: get(order_id)
+Order -> DB: SELECT * FROM order_item WHERE order_id IS ?
+DB -> Order: [lista över alla beställda föremål]
+Order -> main.rb: [lista över alla beställda föremål]
+main.rb -> main.rb: slim(:order)
+main.rb -> Web Server: HTML
+Web Server -> Browser: HTTP response

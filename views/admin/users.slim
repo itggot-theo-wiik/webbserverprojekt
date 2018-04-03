@@ -1,0 +1,17 @@
+h1 All users
+
+table.table.mt-5
+    thead
+        tr
+            th scope="col" #
+            th scope="col" Username
+            th scope="col" Email
+        tbody
+            - @users.each_with_index do |user, i|
+                tr
+                    th scope="row"
+                        = i + 1
+                    td
+                        = user.username
+                    td
+                        = user.email

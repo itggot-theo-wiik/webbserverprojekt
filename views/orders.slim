@@ -1,0 +1,55 @@
+h1 My Orders
+
+- @orders = @orders.reverse
+- @orders.each_with_index do |order, i|
+    h4.mt-5
+        | Order
+        |  
+        = order.id
+        |  -
+        |  
+        = order.order_date
+    h5
+        | Status:
+        |   
+        = order.status
+
+    table.table.table-hover
+        thead
+            tr
+                th scope="col" #
+                th scope="col" Name
+                th scope="col" Price
+                th scope="col" Sale
+                th scope="col" Color
+                th scope="col" Type
+                th scope="col" Size
+
+        tbody
+            - order.items.each_with_index do |x, i|
+                tr
+                    th scope="row"
+                        = i + 1
+                    td
+                        = x[5]
+                    td
+                        = x[1]
+                    td
+                        = x[6]
+                        | %
+                    td
+                        = x[4]
+                    td
+                        = x[2].upcase
+                    td
+                        = x[0].upcase
+
+    form action="/orders" method="post"
+        input type="hidden" value="#{order.id}" name="order_id"
+
+        - if order.status == "shipping" || order.status == "packaging"
+            button.btn.btn-outline-success.mb-3
+                | I have recieved everything in my order 👍
+        - else
+            button.btn.btn-success.mb-3
+                | I have recieved everything in my order 👍

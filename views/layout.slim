@@ -6,44 +6,99 @@ html
         link href="/css/stylesheet.css" type="text/css" rel="stylesheet"
         meta name="viewport" content="width=device-width, initial-scale=1.0"
 
+        / Cat Navicon
         link rel="shortcut icon" href="http://icons.iconarchive.com/icons/sonya/swarm/256/Cat-icon.png"
+
+        / Google Icons
         link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"
 
+        / Open sans font
         link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"
+
+        / Lobster
+        link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet"
+
+        / Bootstrap CSS
         link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous"
-        script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"
+
+        / Bootstrap JS
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        / My JS
+        script src="js/js.js" type="text/javascript"
 
     body
 
         / Header
-        nav.navbar.navbar-expand-lg.navbar-dark.bg-danger
-            a.navbar-brand href="/"
-                | Joe Danger 💝 Merch
-            button.navbar-toggler type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
-                span.navbar-toggler-icon
-            .collapse.navbar-collapse#navbarNav
-                ul.navbar-nav
-                    li.nav-item
-                        a.nav-link href="/"
-                            | Shop
-                    - if session[:username]
+        nav.navbar.navbar-expand-lg.navbar-dark.bg-danger.fixed-top.card-2
+            .container
+                a.navbar-brand href="/"
+                    | Joe Danger 💝 Merch
+                button.navbar-toggler type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
+                    span.navbar-toggler-icon
+
+                .collapse.navbar-collapse#navbarNav
+                    ul.navbar-nav
+                        li.nav-item.dropdown
+                            a.nav-link.dropdown-toggle#navbarDropdown href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                | Fun stuff
+                            .dropdown-menu aria-labelledby="navbarDropdown"
+                                a.dropdown-item href="/stats"
+                                    | Stats
+                                a.dropdown-item href="/gamble"
+                                    | Gamble
+
                         li.nav-item
-                            a.nav-link href="/my-profile"
-                                = session[:username]
+                            a.nav-link href="/shop"
+                                | Shop
+                        - if session[:username]
+                            li.nav-item
+                                a.nav-link href="/my-profile"
+                                    = session[:username]
+                            li.nav-item
+                                a.nav-link href="/orders"
+                                    | My orders
+                            li.nav-item
+                                a.nav-link href="/log-out"
+                                    | Log out
+                        - else
+                            li.nav-item
+                                a.nav-link href="/log-in"
+                                    | Log in
+                            li.nav-item
+                                a.nav-link href="/register"
+                                    | Register
                         li.nav-item
-                            a.nav-link href="/log-out"
-                                | Log out
-                    - else
+                            a.nav-link href="/about"
+                                | About us
                         li.nav-item
-                            a.nav-link href="/log-in"
-                                | Log in
-                        li.nav-item
-                            a.nav-link href="/register"
-                                | Register
-                    li.nav-item
-                        a.nav-link href="/cart"
-                            | Cart
+                            a.nav-link href="/cart"
+                                | Cart
+                                - if session[:cart]
+                                    |  
+                                    = session[:cart].length
+                                    |  
+                                    |  items
+                        - if session[:admin]
+                            li.nav-item.dropdown
+                                a.nav-link.dropdown-toggle#navbarDropdown href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    | Admin Tools
+                                .dropdown-menu aria-labelledby="navbarDropdown"
+                                    a.dropdown-item href="/admin/items"
+                                        | Add items
+                                    a.dropdown-item href="/admin/brands"
+                                        | Add brand
+                                    a.dropdown-item href="/admin/orders"
+                                        | View Orders
+                                    a.dropdown-item href="/admin/users"
+                                        | View all users
 
 
-        .container.pt-4
+
+        .container.pt-4.mb-5.pb-5.mt-5
             == yield
+
+
+            

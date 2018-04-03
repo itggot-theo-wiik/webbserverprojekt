@@ -1,0 +1,37 @@
+h1.text-center.mt-5 Joe Danger 💝 Merch
+
+a.text-center.d-none.d-md-block href="/shop"
+    h2 SO MANY GREAT DEALS GOING ON!! 😱 GO TO THE STORE
+
+a.text-center.d-block.d-md-none href="/shop"
+    h5 Cool people buy stuff on this webpage
+
+.mt-5.center
+    h5.text-center I think YOU should buy... 
+
+    a.text-center href="/items/#{@random_merch.id}"
+        h1= @random_merch.name + "!!!"
+
+form.mt-5 action="/" method="post"
+    .form-group
+        label for="inputComment" Comment: 
+        input.ml-3 type="text" name="inputComment"
+    .form-group
+        label for="inputImgUrl" Img Url:
+        input.ml-3 type="text" name="inputImgUrl"
+
+    button.btn.btn-outline-success type="submit" Post comment
+
+h1.mt-5 Comments
+
+- @comments.each do |comment|
+    h5 = comment.user_id
+    h5 = comment.date
+
+    .row
+        .col-12.col-md-6
+            p
+                = comment.comment
+
+        .col-12.col-md-6
+            img.card-img-top src="#{comment.img_url}" alt="No Image"

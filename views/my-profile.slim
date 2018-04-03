@@ -1,10 +1,30 @@
 h1 My Profile
 
-h3
-    | Användarnamn:
-    |  
-    =  @user.username
-h3
-    | Email:
-    |  
-    = @user.email
+table.table.table-hover
+    thead
+        tr
+            th scope="col" #
+            th scope="col" Username
+            th scope="col" Email
+    tbody
+        tr
+            th scope="row" 1
+            td
+                = @user.username
+            td
+                = @user.email
+
+- if session[:password_change_successfull]
+    - session[:password_change_successfull] = false
+    h5.text-success Password Change Sucessfull
+
+form action="/my-profile" method="post"
+    .form-group
+        label for="inputPassword" New password
+        input type="hidden" value="#{session[:id]}" name="inputUserId"
+        input#inputPassword.form-control type="password" placeholder="Enter password" name="inputPassword"
+    
+    button.btn.btn-success.float-right Change Password
+
+a href="/orders"
+    h1 My orders

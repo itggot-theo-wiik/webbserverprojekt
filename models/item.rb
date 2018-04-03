@@ -1,44 +1,73 @@
 class Item
+    attr_reader :status, :id, :price, :size_id, :size_name, :color_id, :color_name, :color_hex, :merch_id, :merch_type, :name, :sale, :merch_type_id, :size, :hex
 
-    attr_reader :merch_id, :name, :price, :color_name, :color_hex, :size
+    def initialize(item)
+        @id = item.first
+        @status = item[1]
+        @name = item[2]
 
-    def initialize(merch_id, item = nil)
-        db = SQLite3::Database.open('db/db.sqlite')
-        merch = db.execute('SELECT * FROM merch WHERE id IS ?', merch_id).first
-        @merch_id = merch_id
-        @name = merch[1]
-        @price = merch[2]
+        @price = item[3]
+        @sale = 0
 
-        # More specific variables
-        if item != nil
-            @color_name = db.execute('SELECT name FROM colors WHERE id IS ?', item[3]).first.first
-            @color_hex = db.execute('SELECT hex FROM colors WHERE id IS ?', item[3]).first.first
-            @size = db.execute('SELECT size FROM sizes WHERE id IS ?', item[2]).first.first
-        end
+        @size_id = item[4]
+        @size_name = item[5]
+
+        @color_id = item[6]
+        @color_name = item[7]
+        @color_hex = item[8]
+
+        @merch_id = item[9]
+        @merch_type_id = item[10]
+        @merch_type = item[11]
+
     end
 
-    def self.get()
+    def self.one(merch_id)
         db = SQLite3::Database.open('db/db.sqlite')
-        merch_ids = db.execute('SELECT merch_id FROM items WHERE status IS ?', "ready_for_shipping").uniq
-
         output = []
-        merch_ids.each do |merch_id|
-            output << Item.new(merch_id.first)
-        end
 
-        return output
-    end
+        items = db.execute("SELECT items.id, status, merch.name, price, size_id, sizes.size, colors.id as 'color_id', colors.name as 'color_name', hex, merch_id, merch_type_id, merch_type.name FROM items
+        INNER JOIN merch
+        ON items.merch_id = merch.id
+        INNER JOIN colors
+        ON items.color_id = colors.id
+        INNER JOIN sizes
+        ON items.size_id = sizes.id
+        INNER JOIN merch_type
+        ON merch.merch_type_id = merch_type.id
+        WHERE status IS 'ready_for_shipping' AND merch_id IS ?", merch_id.to_i)
 
-    def self.get_merch(merch_id)
-        db = SQLite3::Database.open('db/db.sqlite')
-        items = db.execute('SELECT * FROM items WHERE status IS ? AND merch_id IS ?', ["ready_for_shipping", merch_id]).uniq.sort
-
-        output = []
         items.each do |item|
-            output << Item.new(merch_id, item)
+            output << Item.new(item)
         end
 
         return output
     end
 
+    def self.one_from_id(id)
+        db = SQLite3::Database.open('db/db.sqlite')
+
+        item = db.execute("SELECT items.id, status, merch.name, price, size_id, sizes.size, colors.id as 'color_id', colors.name as 'color_name', hex, merch_id, merch_type_id, merch_type.name FROM items
+        INNER JOIN merch
+        ON items.merch_id = merch.id
+        INNER JOIN colors
+        ON items.color_id = colors.id
+        INNER JOIN sizes
+        ON items.size_id = sizes.id
+        INNER JOIN merch_type
+        ON merch.merch_type_id = merch_type.id
+        WHERE status IS 'ready_for_shipping' AND items.id IS ?", id).first
+
+        return Item.new(item)
+    end
+
+    def self.add(merch:, color:, size:, amount:)
+
+        db = SQLite3::Database.open('db/db.sqlite')
+        
+        amount.times do
+            db.execute('INSERT INTO items (status, size_id, color_id, merch_id) VALUES (?,?,?,?)', ["ready_for_shipping", size, color, merch])
+        end
+
+    end
 end

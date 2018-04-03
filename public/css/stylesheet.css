@@ -1,7 +1,8 @@
 /* https://material.io/color/#!/?view.left=0&view.right=0&primary.color=DE0000&secondary.color=FFBA00 */
 
 * {
-    /* font-family: 'Open Sans', sans-serif; */
+    font-family: 'Open Sans', sans-serif;
+    /* font-family: 'Lobster', cursive; */
 }
 
 .row_center {
@@ -11,12 +12,11 @@
     align-items: center;
 }
 
-.item_image {
-    height: 200px;
-    width: 200px;
-    overflow: hidden;
+.color_example {
+    height: 40px;
+    width: 40px;
+    border-radius: 100px;
 }
-
 
 /* Colors */
 
@@ -49,3 +49,7 @@
 .text_primary_light {}
 
 .text_primary_dark {}
+
+.card-2 {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}

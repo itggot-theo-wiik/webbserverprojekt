@@ -1,23 +1,54 @@
 h1
-    = @items[0].name
+    = @merch.name
 h3
-    = @items[0].price
+    = @merch.price
     |  
     | kr
     |  
     span.badge.bg_primary.text-light AMAZING PRICE
 
-h3.mt-5 Variants
+h5
+    | By:
+    |  
+    - @merch.brands.each_with_index do |x, i|
+        - if i == 0
+            = x
+        - else
+            = " x #{x}"
 
-- @items.each do |item|
-    .mt-3.p-3.bg_secondary_light style="border-radius: 8px"
-        - if item.size != "one-size"
-            h4
-                | Size:
-                |  
-                = item.size.upcase
-        
-        .row_center
-            .mr-3 style="height: 40px; width: 40px; background-color: #{item.color_hex}; border-radius: 100px;"
-            h4  
-                = item.color_name
+- if @items != []
+    h3.mt-5 Items in stock
+    form action="/cart" method="post"
+
+        - if session[:id]
+            <button class="btn btn-success" type="submit">Add to cart</button>
+        - else
+            <button class="btn btn-primary btn-outline" type="submit" disabled>You must be logged in to add to cart</button>
+            a.ml-2 href="/log-in"
+                button.btn.btn-success
+                    | Log in
+
+        - @items.each_with_index do |item, i|
+            .mt-3.p-3.bg_secondary_light style="border-radius: 8px"
+                .custom-control.custom-radio
+                    input.custom-control-input type="radio" name="item" id="item#{i}" value="#{item.id}"
+                    label.custom-control-label for="item#{i}"
+                        - if item.size != "one-size"
+                            h4
+                                | Size:
+                                |  
+                                = item.size_name.upcase
+                        
+                        .row_center
+                            .mr-3.color_example style="background-color: #{item.color_hex}"
+                            h4
+                                = item.color_name
+- else
+    h3.mt-5
+        | Sorry, there are currently no
+        |  
+        i
+            b
+                = @merch.name
+        |  
+        | in stock 😭

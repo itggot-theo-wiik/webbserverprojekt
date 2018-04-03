@@ -1,0 +1,24 @@
+h1
+    | Statistacks 💸
+
+h2.text-center
+    | Total money spent: 
+h1.text-center.display-1#test1
+    | Here
+
+h2.text-center.mt-5
+    | Total money recieved: 
+h1.text-center.display-1
+    | 0 kr 😢
+
+h2.text-center.mt-5
+    | Percentage of orders recieved: 
+h1.text-center.display-1
+    = "#{@percentage_of_orders_recieved}%"
+
+.mt-5#chart-1 style="height: 300px"
+
+<script src="js/Chart.bundle.js"></script>
+<script src="js/chartkick.js"></script>
+<script>my_drawing("date", 888)</script>
+<script>$('#my_div').count_2_amount('#{@total_money_spent}');</script>

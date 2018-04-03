@@ -9,6 +9,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     bcrypt (3.1.11)
+    byebug (10.0.0)
     ffi (1.9.18)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -44,6 +45,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt
+  byebug
   rerun!
   sass
   sinatra
@@ -51,4 +53,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   1.15.3
+   1.16.1

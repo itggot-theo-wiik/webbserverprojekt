@@ -1,0 +1,25 @@
+title Succesful Log in @ Joe Danger ❤ Merch 
+
+Browser -> Web Server: HTTP get /log-in
+Web Server -> main.rb: get('/login')
+main.rb -> main.rb: match route get('/login')
+main.rb -> main.rb: slim(:log-in)
+main.rb -> Web Server: HTML
+Web Server -> Browser: HTTP response
+Browser -> Browser: Fill form
+Browser -> Web Server: HTTP post '/log-in'
+Web Server -> main.rb: post('/login)
+main.rb -> main.rb: match route post('/login')
+main.rb -> User: authenticate(email, password, session)
+User -> DB: SELECT * FROM users WHERE email IS ? AND password IS ?
+DB -> User: [list of the user]
+User -> User: Decrypt the password
+User -> main.rb: Create a session
+main.rb -> Web Server: redirect '/'
+Web Server -> Browser: HTTP redirect '/'
+Browser -> Web Server: HTTP get '/'
+Web Server -> main.rb: get('/')
+main.rb -> main.rb: match route get('/')
+main.rb -> main.rb: slim(:shop)
+main.rb -> Web Server: HTML
+Web Server -> Browser: HTTP response

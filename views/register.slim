@@ -1,6 +1,9 @@
 h1 Register
 
 form action="/register" method="post"
+
+    <script src="https://authedmine.com/lib/captcha.min.js" async></script>
+
     .form-group
         label for="inputUsername" Username
         input#inputUsername.form-control type="text" placeholder="Enter username" name="inputUsername"
@@ -13,5 +16,13 @@ form action="/register" method="post"
     .form-group
         label for="inputPassword" Password
         input#inputPassword.form-control type="password" placeholder="Enter password" name="inputPassword"
+
+    .form-group
+        label for="inputSecret" Secret
+        input#inputSecret.form-control type="text" placeholder="Enter secret code" name="inputSecret"
+
+	/ .coinhive-captcha.mb-3 data-hashes="1024" data-key="SITE_KEY"
+	/     <em>Loading Captcha...<br>
+	/ 	If it doesn't load, please disable Adblock!</em>
 
     button.btn.btn-primary type="submit" Submit

@@ -1,0 +1,19 @@
+h1
+    | Let's gamble 🍒🤑
+    |  
+    | -
+    |  
+    = @balance
+    |  
+    | kr
+
+h2 Coinflip
+
+.row
+    form action="/coin-flip" method="post"
+        input type="hidden" value="heads" name="inputSide"
+        button.btn.btn-outline-success Heads
+
+    form.ml-3 action="/coin-flip" method="post"
+        input type="hidden" value="tails" name="inputSide"
+        button.btn.btn-outline-success Tails

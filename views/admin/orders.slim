@@ -1,0 +1,108 @@
+h1 All orders
+
+form.mb-5 action="/admin/orders" method="post"
+    .row
+        .col-6
+            h5 Status
+            
+            ul
+                li
+                    - if @packaging == "packaging"
+                        <input type="checkbox" value="packaging" name="inputStatus[]" checked>
+                    - else
+                        input type="checkbox" value="packaging" name="inputStatus[]"
+                    label.ml-2 Packaging
+                li
+                    - if @shipping == "shipping"
+                        <input type="checkbox" value="shipping" name="inputStatus[]" checked>
+                    - else
+                        input type="checkbox" value="shipping" name="inputStatus[]"
+                    label.ml-2 Shipping
+                li
+                    - if @recieved == "recieved"
+                        <input type="checkbox" value="recieved" name="inputStatus[]" checked>
+                    - else
+                        input type="checkbox" value="recieved" name="inputStatus[]"
+                    label.ml-2 Recieved
+                li
+                    - if @returned == "returned"
+                        <input type="checkbox" value="returned" name="inputStatus[]" checked>
+                    - else
+                        input type="checkbox" value="returned" name="inputStatus[]"
+                    label.ml-2 Returned
+
+        .col-6
+            .form-group
+                label for="inputUserId" User Id
+                input#inputUserId.form-control type="text" placeholder="Enter User Id" name="inputUserId"
+
+    button.btn.btn-success.float-right Filter
+
+- @orders = @orders.reverse
+- @orders.each_with_index do |order, i|
+    h4.mt-5
+        | Order
+        |  
+        = order.id
+        |  -
+        |  
+        = order.order_date
+    h5
+        | Status:
+        |   
+        = order.status
+
+    table.table.table-hover
+        thead
+            tr
+                th scope="col" #
+                th scope="col" Name
+                th scope="col" Price
+                th scope="col" Sale
+                th scope="col" Color
+                th scope="col" Type
+                th scope="col" Size
+
+        tbody
+            - order.items.each_with_index do |x, i|
+                tr
+                    th scope="row"
+                        = i + 1
+                    td
+                        = x[5]
+                    td
+                        = x[1]
+                    td
+                        = x[6]
+                        | %
+                    td
+                        = x[4]
+                    td
+                        = x[2].upcase
+                    td
+                        = x[0].upcase
+
+    .row
+        .col-3
+            h5.text-danger Change status:
+        .col-9
+            form action="/admin/change_status" method="post"
+                input type="hidden" value="#{order.user_id}" name="inputUserId"
+                input type="hidden" value="#{order.id}" name="inputOrderId"
+
+                .form-group
+                    .row
+                        .ml-1
+                            input type="radio" value="packaging" name="inputStatus"
+                            label.ml-2 for="x" Packaging
+
+                        .ml-4
+                            input type="radio" value="shipping" name="inputStatus"
+                            label.ml-2 for="x" Shipping
+
+                        .ml-4
+                            input type="radio" value="returned" name="inputStatus"
+                            label.ml-2 for="x" Returned
+
+                        .ml-4
+                            button.btn.btn-outline-success Changer status

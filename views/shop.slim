@@ -1,21 +1,82 @@
-h4 Filter
-form action="/" method="post"
-    .form-group
-        input type="text"
+/ h2.mb-4 Filter
 
-    button.btn.btn-primary type="submit" Submit
+.container
+    form action="/shop" method="post"
+
+        .row.bg_secondary_light.rounded.p-3.mb-4
+            .col-12.col-sm-4.col-md-3
+                h3 Merch type
+                ul
+                    - @merch_types.each do |type|
+                        li
+                            - if @merch_type and @merch_type.include? (type.first.to_s)
+                                / Checked
+                                <input type="checkbox" aria-label="Checkbox for merch type" name='merch_types[]' value="#{type.first}" checked>
+                            - else
+                                / NOT checked
+                                <input type="checkbox" aria-label="Checkbox for merch type" name='merch_types[]' value="#{type.first}">
+                            |  
+                            = type[1].upcase
+
+            .col-12.col-sm-4.col-md-3
+                h3 Size
+                ul
+                    - @sizes.each do |size|
+                        li
+                            - if @size and @size.include? (size.first.to_s)
+                                / Checked
+                                <input type="checkbox" aria-label="Checkbox for sizes" name='sizes[]' value="#{size.first}" checked>
+                            - else
+                                / NOT checked
+                                input type="checkbox" aria-label="Checkbox for sizes" name='sizes[]' value="#{size.first}"
+                            |  
+                            = size[1].upcase
+            .col-12.col-sm-4.col-md-3
+                h3 Color
+                ul
+                    li Should i exist? 😢
+
+            .col-12.col-md-3
+                h3 Brand
+                ul
+                    li what about me
+            
+
+            .col-12
+                button.btn.btn-primary.float-right type="submit" Filter 🎉
 
 h1.mt-5 Shop
 
+- if @merchandises == []
+    h3 Sorry!
+    h4 There are none of this item.
+
 .card-columns
-    - @items.each do |item|
-        a href="/items/#{item.merch_id}"
+    - @merchandises.each do |merch|
+        a href="/items/#{merch.id}"
             .card
-                img.card-img-top src="http://3.bp.blogspot.com/-QDZhPJbkbII/T3IGgTLZMtI/AAAAAAAAAIM/jiXE9SU9Bo4/s1600/White1.jpg" alt="IMAGE"
+                - if merch.img_url
+                    img.card-img-top src="#{merch.img_url}" alt="IMAGE"
+                - else
+                    - random = rand(7)
+                    - if random == 0
+                        img.card-img-top src="http://3.bp.blogspot.com/-QDZhPJbkbII/T3IGgTLZMtI/AAAAAAAAAIM/jiXE9SU9Bo4/s1600/White1.jpg" alt="IMAGE"
+                    - elsif random == 1
+                        img.card-img-top src="https://images.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FjYu9pc7JEwE%2Fmaxresdefault.jpg&f=1" alt="IMAGE"
+                    - elsif random == 2
+                        img.card-img-top src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fcdn.pcwallart.com%2Fimages%2Fcute-sphynx-cat-wallpaper-2.jpg&f=1" alt="IMAGE"
+                    - elsif random == 3
+                        img.card-img-top src="https://images.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FBX2a6mp9hio%2Fmaxresdefault.jpg&f=1" alt="IMAGE"
+                    - elsif random == 4
+                        img.card-img-top src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fep.yimg.com%2Fay%2Fentirelypets%2Fdoggone-cat-dog-costume-xlarge-13.jpg&f=1" alt="IMAGE"
+                    - elsif random == 5
+                        img.card-img-top src="http://images.biltema.com/PAXToImageService.svc/product/large/2000040345" alt="IMAGE"
+                    - else                    
+                        img.card-img-top src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fs3-ak.buzzfeed.com%2Fstatic%2F2015-01%2F17%2F13%2Fenhanced%2Fwebdr09%2Fenhanced-6722-1421520909-3.jpg&f=1" alt="IMAGE"
                 .card-body
                     h5.card-title
-                        = item.name
+                        = merch.name
                     p.card-text
-                        = item.price
+                        = merch.price
                         |  
                         | kr
