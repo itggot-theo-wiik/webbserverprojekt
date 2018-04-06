@@ -1,3 +1,4 @@
+#Empty line to create pull request
 class Gamble
 
     def self.pay(user_id, money, session)

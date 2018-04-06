@@ -1,3 +1,4 @@
+#Empty line to create pull request
 class Brand < MyBaseclass
 
     attr_reader :id, :name

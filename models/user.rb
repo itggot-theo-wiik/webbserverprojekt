@@ -1,3 +1,4 @@
+#Empty line to create pull request
 class User < MyBaseclass
 
     attr_reader(:id, :username, :email)

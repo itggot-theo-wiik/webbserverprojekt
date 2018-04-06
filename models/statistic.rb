@@ -1,3 +1,4 @@
+#Empty line to create pull request
 class Statistic
 
     def self.total_money()

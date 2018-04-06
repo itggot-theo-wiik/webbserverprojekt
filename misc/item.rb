@@ -1,3 +1,4 @@
+#Empty line to create pull request
 class Item
     attr_reader :status, :id, :price, :size_id, :size_name, :color_id, :color_name, :color_hex, :merch_id, :merch_type, :name, :sale, :merch_type_id
 
