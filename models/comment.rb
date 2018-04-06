@@ -1,3 +1,4 @@
+#Empty line to create pull request
 class Comment < MyBaseclass
 
     attr_reader :id, :comment, :user_id, :status, :img_url, :date

@@ -1,3 +1,4 @@
+#Empty line to create pull request
 class MyBaseclass
 
     def self.table_name(name)

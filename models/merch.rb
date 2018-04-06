@@ -1,3 +1,4 @@
+#Empty line to create pull request
 class Merch
 
     attr_reader :merch_id, :name, :price, :color_name, :color_hex, :size, :brands, :id, :img_url

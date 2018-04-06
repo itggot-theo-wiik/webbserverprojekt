@@ -1,3 +1,4 @@
+#Empty line to create pull request
 class Color < MyBaseclass
 
     attr_reader :id, :name, :hex
