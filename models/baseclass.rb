@@ -30,9 +30,12 @@ class MyBaseclass
         all = db.execute("SELECT * FROM #{@table_name}")
 
         output = []
-        all.each do |one|
-            output << self.new(one)
-        end
+
+        all.map { |one| output << self.new(one) }
+        
+        # all.each do |one|
+        #     output << self.new(one)
+        # end
 
         return output
     end
