@@ -46,10 +46,11 @@ class MyBaseclass
         values = hash.values.map { |value| value.to_s}
         db = SQLite3::Database.open('db/db.sqlite')
 
-        arr = []
-        @columns.length.times do |x|
-            arr << '?'
-        end
+        arr = '?' * @columns.length
+        
+        # @columns.length.times do |x|
+        #     arr << '?'
+        # end
 
         db.execute("INSERT INTO #{@table_name} (#{@columns.join(', ')}) VALUES (#{arr.join(', ')})", values)
 
