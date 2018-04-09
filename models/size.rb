@@ -12,9 +12,11 @@ class Size
         sizes = db.execute('SELECT * FROM sizes')
         output = []
 
-        sizes.each do |size|
-            output << Size.new(size)
-        end
+        sizes.map { |size| output << Size.new(size) }
+        
+        # sizes.each do |size|
+        #     output << Size.new(size)
+        # end
 
         return output
     end
