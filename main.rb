@@ -14,13 +14,8 @@ class Main < Sinatra::Base
         comment = params[:inputComment]
         img_url = params[:inputImgUrl]
 
-        # if session[:id]
-            date = Time.now.to_s
-            Comment.create({user_id: 3, comment: comment, img_url: img_url, date: date})
-            # Comment.create(session[:id], comment, img_url)
-        # end
+        redirect '/' unless session[:id]
 
-        redirect '/'
     end
 
     get '/shop' do
@@ -109,12 +104,7 @@ class Main < Sinatra::Base
     end
 
     get '/my-profile' do
-        if session[:id]
-            @user = User.get(session[:id].to_i)
-            slim :'my-profile'
-        else
-            redirect '/log-in'
-        end
+        redirect '/log-in' unless session[:id]
     end
 
     post '/my-profile' do
@@ -203,27 +193,11 @@ class Main < Sinatra::Base
     end
 
     get '/orders' do
-        if session[:id]
-            @orders = Order.get(session[:id].to_i)
-            slim :orders
-        else
-            redirect '/log-in'
-        end
+        redirect '/log-in' unless session[:id]
     end
 
     post '/orders' do
-        if session[:id]
-
-            # Change status of order
-            if order_id = params['order_id']
-                # gets
-                if Order.change_status(order_id.to_i, session[:id].to_i, "recieved")
-                    # Success
-                    redirect '/orders'
-                else
-                    # Fail
-                    redirect '/orders'
-                end
+        redirect '/log-in' unless session[:id]
             end
 
             @cart = Cart.get(session[:cart], session)
@@ -390,18 +364,8 @@ class Main < Sinatra::Base
     end
 
     post '/coin-flip' do
-        if session[:id]
-            bet = 10
-            side = params[:inputSide]
 
-            if bet.to_f < Gamble.balance(session[:id])
-                # It can bet
-                if Gamble.pay(session[:id], bet, session)
-                    Gamble.coin_flip(side, bet, session)
-                    redirect '/gamble'
-                else
-                    redirect '/gamble'
-                end
+        redirect '/log-in' unless session[:id]
             else
                 # Can not
             end
