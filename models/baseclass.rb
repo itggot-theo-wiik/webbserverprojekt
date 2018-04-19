@@ -26,11 +26,19 @@ class MyBaseclass
     end
 
     def self.all()
+    def self.all(sort = nil)
         db = SQLite3::Database.open('db/db.sqlite')
         all = db.execute("SELECT * FROM #{@table_name}")
 
         output = []
+        case sort
+            when 'reverse'
+                all = db.execute("SELECT * FROM #{@table_name} ORDER BY id DESC")
+            else
+                all = db.execute("SELECT * FROM #{@table_name}")
+        end
 
+        output = []
         all.map { |one| output << self.new(one) }
         
         # all.each do |one|

@@ -5,7 +5,7 @@ class Main < Sinatra::Base
     get '/' do
         session[:return_url] = "/"
         @random_merch = Merch.get_random()
-        @comments = Comment.all().reverse
+        @comments = Comment.all('reverse')
 
         slim :home
     end
