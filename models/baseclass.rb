@@ -5,14 +5,8 @@ class MyBaseclass
     end
 
     def self.column(name, options = nil)
-        @columns ||= []
-
-        if !options
-            @columns << name
-        else
-            @columns << {name => , options}
-        end
-
+        @columns ||= {}
+        @columns[name] = options
     end
 
     def self.columns
@@ -50,17 +44,67 @@ class MyBaseclass
 
     #Comment.create(comment: "hej", img_url: "slkdjfldkjf")
     def self.create(hash)
-        keys = hash.keys.map { |key| key.to_s}
-        values = hash.values.map { |value| value.to_s}
         db = SQLite3::Database.open('db/db.sqlite')
 
-        arr = '?' * @columns.length
-        
-        # @columns.length.times do |x|
-        #     arr << '?'
-        # end
+        arr_of_question_marks = ('?' * @columns.length).split(//).join(', ')
 
-        db.execute("INSERT INTO #{@table_name} (#{@columns.join(', ')}) VALUES (#{arr.join(', ')})", values)
+        default = []
 
+        # Loop trough all the columns and check if
+        # there are any options :~)
+        @columns.each do |column|
+            if column[1] != nil
+
+                # BCrypt Password
+                if column[1][:type] == "BCryptHash"
+                    hash[column[0].to_sym] = BCrypt::Password.create(hash[column[0].to_sym])
+                end
+
+                # Unique
+                if column[1][:unique]
+                    query = db.execute("SELECT * FROM #{@table_name} WHERE #{column[0]} IS ?", hash[column[0].to_sym])
+                    if query != []
+                        return false
+                    end
+                end
+
+                # Required
+                if column[1][:required]
+                    hash.each_with_index do |thang, i|
+
+                        # Empty?
+                        if "#{thang[0]}" == "#{column[0]}"
+                            if (thang[1] != "") || (thang[1] != nil ) || (thang[1] != "nil" )
+                                break
+                            else
+                                return false
+                            end
+                        end
+
+                        # Last one and still not found? It does not exist, return false.
+                        if hash.length == (i + 1)
+                            if column[1][:default] != nil
+                                # [key, value]
+                                default << [column[0], column[1][:default]]
+                                break
+                            end
+                            return false
+                        end
+                    end
+                end
+            end
+        end
+
+        # Add all the columns that have a default value to the hash
+        default.map { |arr| hash[arr[0]] = arr[1] }
+
+        keys = hash.keys.map { |key| key.to_s}
+        values = hash.values.map { |value| value.to_s}
+
+        # Create the SQL query
+        db.execute("INSERT INTO #{@table_name} (#{keys.join(', ')}) VALUES (#{arr_of_question_marks})", values)
+
+        return true
     end
+
 end

@@ -16,6 +16,13 @@ class Main < Sinatra::Base
 
         redirect '/' unless session[:id]
 
+        date = Time.now.to_s
+        if Comment.create({user_id: session[:id].to_i, comment: comment, img_url: img_url})
+            redirect '/'
+        else
+            redirect '/error'
+        end
+
     end
 
     get '/shop' do
