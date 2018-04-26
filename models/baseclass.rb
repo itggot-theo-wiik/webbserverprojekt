@@ -44,10 +44,9 @@ class MyBaseclass
 
     #Comment.create(comment: "hej", img_url: "slkdjfldkjf")
     def self.create(hash)
+    def self.attribute_checker(hash)
         db = SQLite3::Database.open('db/db.sqlite')
-
-        arr_of_question_marks = ('?' * @columns.length).split(//).join(', ')
-
+        
         default = []
 
         # Loop trough all the columns and check if
@@ -70,11 +69,11 @@ class MyBaseclass
 
                 # Required
                 if column[1][:required]
-                    hash.each_with_index do |thang, i|
+                    hash.each_with_index do |hash_column, i|
 
                         # Empty?
-                        if "#{thang[0]}" == "#{column[0]}"
-                            if (thang[1] != "") || (thang[1] != nil ) || (thang[1] != "nil" )
+                        if "#{hash_column[0]}" == "#{column[0]}"
+                            if (hash_column[1] != "") && (hash_column[1] != nil ) && (hash_column[1] != "nil" )
                                 break
                             else
                                 return false
@@ -95,6 +94,9 @@ class MyBaseclass
             end
         end
 
+        return {default: default, hash: hash}
+        # return default
+    end
         # Add all the columns that have a default value to the hash
         default.map { |arr| hash[arr[0]] = arr[1] }
 
