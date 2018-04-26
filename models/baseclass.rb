@@ -107,4 +107,8 @@ class MyBaseclass
         return true
     end
 
+    def self.update(search_column, search_value, target_column, value)
+        db = SQLite3::Database.open('db/db.sqlite')
+        db.execute("UPDATE #{@table_name} SET #{target_column} = ? WHERE #{search_column} IS ?", [value, search_value])
+    end
 end
