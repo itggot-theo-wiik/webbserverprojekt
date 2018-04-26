@@ -97,6 +97,11 @@ class MyBaseclass
         return {default: default, hash: hash}
         # return default
     end
+        attribute_checker = self.attribute_checker(hash)
+        return false if !attribute_checker
+
+        default = attribute_checker[:default]
+        hash = attribute_checker[:hash]
         # Add all the columns that have a default value to the hash
         default.map { |arr| hash[arr[0]] = arr[1] }
 
