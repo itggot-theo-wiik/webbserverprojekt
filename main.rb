@@ -1,6 +1,11 @@
 class Main < Sinatra::Base
 
     enable :sessions
+    before do
+        if session[:id]
+            @user = User.get(session[:id])
+        end
+    end
 
     get '/' do
         session[:return_url] = "/"
@@ -123,7 +128,7 @@ class Main < Sinatra::Base
         p new_password
 
         # Is the forms password the same as the logged in one?
-        if (session[:id].to_i == user_id.to_i) && new_password != nil
+        if (@user.id == user_id.to_i) && new_password != nil
             User.change_password(user_id.to_i, new_password)
             session[:password_change_successfull] = true
         else
