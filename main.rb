@@ -156,21 +156,22 @@ class Main < Sinatra::Base
     get '/cart' do
         if session[:id]
             @cart = Cart.get(session[:cart], session[:id])
+        redirect '/log-in' unless session[:id]
 
             @items = []
+        @cart = Cart.get(session[:cart], session[:id])
 
-            @cart.each do |x|
-                if x
-                    @items << Item.one_from_id(x.first)
-                else
-                    @items << x
-                end
+        ids = []
+        @cart.map { |x| ids << x.first }
+        @items = Item.one_from_id(ids)
+
+        if @items.length < @cart.length
+            (@cart.length - @items.length).times do |x|
+                @items << nil
             end
-
-            slim :cart
-        else
-            redirect '/log-in'
         end
+
+        slim :cart
     end
 
     post '/cart' do
