@@ -5,6 +5,25 @@ class Main < Sinatra::Base
         if session[:id]
             @user = User.get(session[:id])
         end
+
+        # Admin
+        admin_paths = /^\/admin\/\S+/
+        if admin_paths.match(request.path)
+
+            redirect '/log-in' unless @user
+
+            if @user.admin != "true"
+                redirect '/log-in'
+            end
+        end
+
+        # Other
+        requires_log_in = ['/my-profile', '/orders']
+        requires_log_in.each do |x|
+            if request.path == x && !@user
+                redirect '/log-in'
+            end
+        end
     end
 
     get '/' do
