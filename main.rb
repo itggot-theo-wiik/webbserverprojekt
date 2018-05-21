@@ -27,7 +27,7 @@ class Main < Sinatra::Base
     end
 
     get '/' do
-        session[:return_url] = "/"
+        session[:return_url] = "/" unless @user
         @random_merch = Merch.get_random()
         @comments = Comment.all('reverse')
 
@@ -50,7 +50,7 @@ class Main < Sinatra::Base
     end
 
     get '/shop' do
-        session[:return_url] = "/shop"
+        session[:return_url] = "/shop" unless @user
         @merch_type = params['merch_type']
         @size = params['size']
 
@@ -164,7 +164,7 @@ class Main < Sinatra::Base
 
     get '/items/:id' do
         id = params[:id].to_i
-        session[:return_url] = "/items/#{id}"
+        session[:return_url] = "/items/#{id}" unless @user
         @merch = Merch.one(id)
         @items = Item.one(id)
 
